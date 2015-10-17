@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
 public class Robot {
     private DcMotor leftMotor;
@@ -10,8 +11,9 @@ public class Robot {
     public Robot(DcMotor leftMotor, DcMotor rightMotor) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
-
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     public void directDrive(double leftValue, double rightValue) {
@@ -25,16 +27,11 @@ public class Robot {
         rightmotor.setPower(speed);
     }
     
-    public void rotate(double deg, double speed) {
+    public void rotate(double deg) {
         // This will be smarter and rotate exact degrees with motor encoders.
-        if(deg < 0) {
-            motorLeft.setPower(-speed);
-            motorRight.setPower(speed);
-        }
-        if(deg > 0) {
+        double power = deg / 180;
             motorLeft.setPower(speed);
             motorRight.setPower(-speed);
-        }
     }
 
     public void directDrive(double leftValue, double rightValue, boolean squareInputs) {
