@@ -5,20 +5,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 public class Teleop extends OpMode {
-    private DcMotor Right;
-    private DcMotor Left;
-    //private DcMotor backRight;
-    //private DcMotor backLeft;
+    private DcMotor motorRight;
+    private DcMotor motorLeft;
 
     @Override
     public void init() {
-        Right = hardwareMap.dcMotor.get("Right");
-        Left = hardwareMap.dcMotor.get("Left");
-        //backRight = hardwareMap.dcMotor.get("Back_Right");
-        //backLeft = hardwareMap.dcMotor.get("Back_Left");
+        motorRight = hardwareMap.dcMotor.get("Right");
+        motorLeft = hardwareMap.dcMotor.get("Left");
 
-        Right.setDirection(DcMotor.Direction.REVERSE);
-        //backRight.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
     @Override
@@ -26,9 +21,7 @@ public class Teleop extends OpMode {
         float leftY = gamepad1.left_stick_y;
         float rightY = gamepad1.right_stick_y;
 
-        Right.setPower(rightY);
-        Left.setPower(leftY);
-        //backRight.setPower(rightY);
-        //backLeft.setPower(leftY);
+        motorRight.setPower(rightY);
+        motorLeft.setPower(leftY);
     }
 }
