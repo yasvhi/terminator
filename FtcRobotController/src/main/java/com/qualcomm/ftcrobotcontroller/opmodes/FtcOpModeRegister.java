@@ -33,7 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
-import com.qualcomm.ftcrobotcontroller.opmodes.customCode;
+import com.qualcomm.ftcrobotcontroller.opmodes.customCode.Teleop;
 
 /**
  * Register Op Modes
