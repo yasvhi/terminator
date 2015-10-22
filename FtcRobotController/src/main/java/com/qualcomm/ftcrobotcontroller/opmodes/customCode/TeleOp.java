@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-public class Teleop extends OpMode {
+public class TeleOp extends OpMode {
     private DcMotor motorRight;
     private DcMotor motorLeft;
 
