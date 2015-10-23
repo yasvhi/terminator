@@ -7,10 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 public class Robot {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
+    private AdafruitI2cRGBSensor rgbSensor;
 
-    public Robot(DcMotor leftMotor, DcMotor rightMotor) {
+    public Robot(DcMotor leftMotor, DcMotor rightMotor, AdafruitI2cRGBSensor rgbSensor) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
+        this.rgbSensor = rgbSensor;
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
