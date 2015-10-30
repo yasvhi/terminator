@@ -12,8 +12,8 @@ public class Autonomous extends LinearOpMode {
     final static double GEAR_RATIO = 1;     //gear ratio
     final static double WHEEL_DIAMETER = 2.625;     //diameter of wheel
     final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
-    private static double distance;
-    final static double ROTATIONS = distance / CIRCUMFERENCE;
+    final static int DISTANCE = 5;
+    final static double ROTATIONS = DISTANCE / CIRCUMFERENCE;
     final static double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
 
     @Override
@@ -25,13 +25,21 @@ public class Autonomous extends LinearOpMode {
         right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
 
-        distance = 12;
+        //distance = 12;
         right.setTargetPosition((int) COUNTS);
         left.setTargetPosition((int) COUNTS);
 
         right.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
         left.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        right.setPower(.5);
-        left.setPower(.5);
+        right.setPower(-0.5);
+        left.setPower(-0.5);
+
+        if (right.getCurrentPosition() == DISTANCE) {
+            right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+            left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        }
+        //telemetry.addData("Motor Target", COUNTS);
+        //telemetry.addData("Left Position", left.getCurrentPosition());
+        //telemetry.addData("Right Position", right.getCurrentPosition());
     }
 }
