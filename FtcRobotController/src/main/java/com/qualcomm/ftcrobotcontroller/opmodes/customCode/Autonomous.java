@@ -15,6 +15,7 @@ public class Autonomous extends LinearOpMode {
     final static int DISTANCE = 5;
     final static double ROTATIONS = DISTANCE / CIRCUMFERENCE;
     final static double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
+    final static int ERROR_THRESHOLD = 10;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,22 +25,41 @@ public class Autonomous extends LinearOpMode {
 
         right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-
+        telemetry.addData("Reset Encoders", "Done");
         //distance = 12;
         right.setTargetPosition((int) COUNTS);
         left.setTargetPosition((int) COUNTS);
 
         right.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
         left.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        right.setPower(-0.5);
-        left.setPower(-0.5);
+        telemetry.addData("Running to Target", "Started");
 
-        if (right.getCurrentPosition() == DISTANCE) {
-            right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-            left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        telemetry.addData("Motor Target", COUNTS);
+        telemetry.addData("Left Position", left.getCurrentPosition());
+        telemetry.addData("Right Position", right.getCurrentPosition());
+
+        right.setPower(0.5);
+        left.setPower(0.5);
+        telemetry.addData("Setting Power", "Set");
+
+        telemetry.addData("Motor Target", COUNTS);
+        telemetry.addData("Left Position", left.getCurrentPosition());
+        telemetry.addData("Right Position", right.getCurrentPosition());
+
+        while (true) { // && left.getCurrentPosition() == DISTANCE) {
+            telemetry.addData("Motor Target", COUNTS);
+            telemetry.addData("Left Position", left.getCurrentPosition());
+            telemetry.addData("Right Position", right.getCurrentPosition());
+            int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
+
+            if (error < ERROR_THRESHOLD) {
+                right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+                left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+                telemetry.addData("Final Reset", "Done");
+                break;
+            }
+            //waitOneHardwareCycle();
         }
-        //telemetry.addData("Motor Target", COUNTS);
-        //telemetry.addData("Left Position", left.getCurrentPosition());
-        //telemetry.addData("Right Position", right.getCurrentPosition());
+
     }
 }
