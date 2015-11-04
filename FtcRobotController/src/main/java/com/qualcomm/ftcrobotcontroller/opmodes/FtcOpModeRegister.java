@@ -31,9 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.customCode.Autonomous;
+import com.qualcomm.ftcrobotcontroller.opmodes.customCode.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
-import com.qualcomm.ftcrobotcontroller.opmodes.customCode.*;
 
 /**
  * Register Op Modes
@@ -56,21 +57,21 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("NullOp", NullOp.class);
+      manager.register("NullOp", NullOp.class);
 
-    manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
-    manager.register ("PushBotManual", PushBotManual.class);
-    manager.register("TeleOp [REAL]", TeleOp.class);
+      manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
+      manager.register("K9TeleOp", K9TeleOp.class);
+      manager.register ("PushBotAuto", PushBotAuto.class);
+      manager.register ("PushBotManual", PushBotManual.class);
+      manager.register("Teleop", Teleop.class);
+      manager.register("Autonomous", Autonomous.class);
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
 
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
-    //manager.register("MRRGBExample", MRRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
-    //manager.register("HTRGBExample", HTRGBExample.class);
 
     //manager.register("IrSeekerOp", IrSeekerOp.class);
     //manager.register("CompassCalibration", CompassCalibration.class);
@@ -92,9 +93,9 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register ("PushBotOdsFollowEvent", PushBotOdsFollowEvent.class);
     //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);    
     
-    //manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
-    //manager.register("PushBotIrSeek", PushBotIrSeek.class);
-    //manager.register("PushBotSquare", PushBotSquare.class);
+    //manager.register("PushBotDriveTouch", PushBotDriveTouch.java);
+    //manager.register("PushBotIrSeek", PushBotIrSeek.java);
+    //manager.register("PushBotSquare", PushBotSquare.java);
 
     
     
