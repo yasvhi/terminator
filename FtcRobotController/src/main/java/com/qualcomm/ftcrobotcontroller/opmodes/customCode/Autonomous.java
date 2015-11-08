@@ -19,6 +19,8 @@ public class Autonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        waitForStart();
+
         right = hardwareMap.dcMotor.get("Right");
         left = hardwareMap.dcMotor.get("Left");
         right.setDirection(DcMotor.Direction.REVERSE);
@@ -27,8 +29,6 @@ public class Autonomous extends LinearOpMode {
         left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         telemetry.addData("Reset Encoders", "Done");
 
-        waitForStart();
-        
         //distance = 12;
         right.setTargetPosition((int) COUNTS);
         left.setTargetPosition((int) COUNTS);
