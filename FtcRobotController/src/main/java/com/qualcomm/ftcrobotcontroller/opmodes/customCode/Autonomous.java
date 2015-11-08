@@ -26,6 +26,9 @@ public class Autonomous extends LinearOpMode {
         right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         telemetry.addData("Reset Encoders", "Done");
+
+        waitForStart();
+        
         //distance = 12;
         right.setTargetPosition((int) COUNTS);
         left.setTargetPosition((int) COUNTS);
