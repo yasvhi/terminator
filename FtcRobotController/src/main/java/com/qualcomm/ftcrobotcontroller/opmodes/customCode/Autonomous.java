@@ -45,11 +45,11 @@ public class Autonomous extends LinearOpMode {
         left.setPower(0.5);
         telemetry.addData("Setting Power", "Set");
 
-        telemetry.addData("Motor Target", COUNTS);
+        telemetry.addData("Motor Targ et", COUNTS);
         telemetry.addData("Left Position", left.getCurrentPosition());
         telemetry.addData("Right Position", right.getCurrentPosition());
 
-        while (true) { // && left.getCurrentPosition() == DISTANCE) {
+        /*while (true) { // && left.getCurrentPosition() == DISTANCE) {
             telemetry.addData("Motor Target", COUNTS);
             telemetry.addData("Left Position", left.getCurrentPosition());
             telemetry.addData("Right Position", right.getCurrentPosition());
@@ -62,7 +62,7 @@ public class Autonomous extends LinearOpMode {
                 break;
             }
             //waitOneHardwareCycle();
-        }
+        }*/
 
     }
 }
