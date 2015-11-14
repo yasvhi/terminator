@@ -55,4 +55,6 @@ August 3, 2015
 ## Custom OpModes
 * `customCode.TeleOp`
 
->>>>>>> 2cf57e7954728dd0ad8c76cd72bfea5b8b92ddc2
+=======
+terminator
+==========
