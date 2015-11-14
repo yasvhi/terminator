@@ -41,9 +41,9 @@ public class Autonomous extends ETBaseOpMode {
     left.setPower(0.5);
     telemetry.addData("Power Set", "true");
 
-    telemetry.addData("Motor Target", COUNTS);
-    telemetry.addData("Left Position", left.getCurrentPosition());
-    telemetry.addData("Right Position", right.getCurrentPosition());
+    //telemetry.addData("Motor Target", COUNTS);
+    //telemetry.addData("Left Position", left.getCurrentPosition());
+    //telemetry.addData("Right Position", right.getCurrentPosition());
   }
   
   @Override
