@@ -27,15 +27,17 @@ public class Teleop extends OpMode {
         float rightY = -gamepad1.right_stick_y;
         boolean toggled = false;
 
-        if(gamepad1.x == true) {
+        if(gamepad1.right_trigger > 0.8 || gamepad1.left_trigger > 0.8) {
             toggled = !toggled;
         }
+        telemetry.addData("Inverted Controls", (toggled ? "On":"Off"));
         if(toggled) {
             leftY = gamepad1.left_stick_y;
             rightY = gamepad1.right_stick_y;
         }
 
-        Right.setPower(rightY / 2);
-        Left.setPower(leftY / 2);
+        telemetry.addData("Power Factor", .25);
+        Right.setPower(rightY * .25);
+        Left.setPower(leftY * .25);
     }
 }
