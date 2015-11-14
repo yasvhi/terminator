@@ -48,18 +48,19 @@ public class Autonomous extends ETBaseOpMode {
   
   @Override
   public void etLoop() throws InterruptedException {
-    telemetry.addData("Motor Target", COUNTS);
     telemetry.addData("Left Position", left.getCurrentPosition());
     telemetry.addData("Right Position", right.getCurrentPosition());
     telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
-    telemetry.addData("Right Motor Power", Double.toString(left.getPower()));
+    telemetry.addData("Right Motor Power", Double.toString(left.getPower()));   telemetry.addData("Motor Target", COUNTS);
+
     int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
 
     if (error < ERROR_THRESHOLD) {
         right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         telemetry.addData("Final Reset", "Done");
-        etBreakLoop();
+        right.setPower(0);
+        left.setPower(0);
     }
   }
 }
