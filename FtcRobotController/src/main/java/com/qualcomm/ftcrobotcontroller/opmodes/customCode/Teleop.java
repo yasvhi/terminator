@@ -34,9 +34,6 @@ public class Teleop extends OpMode {
             leftY = gamepad1.left_stick_y;
             rightY = gamepad1.right_stick_y;
         }
-        if(gamepad1.b == true) {
-            toggled = !toggled;
-        }
 
         Right.setPower(rightY);
         Left.setPower(leftY);
