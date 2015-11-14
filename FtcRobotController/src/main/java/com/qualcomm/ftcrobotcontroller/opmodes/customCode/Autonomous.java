@@ -53,14 +53,27 @@ public class Autonomous extends ETBaseOpMode {
     telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
     telemetry.addData("Right Motor Power", Double.toString(left.getPower()));   telemetry.addData("Motor Target", COUNTS);
 
-    int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
+    //int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
 
-    if (error < ERROR_THRESHOLD) {
-        right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        telemetry.addData("Final Reset", "Done");
-        right.setPower(0);
-        left.setPower(0);
+    if (hasArrived()) {
+    //right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    //left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    telemetry.addData("Stopping Robot", "Done");
+      stopRobot();
     }
+  }
+
+  private boolean hasArrived() {
+    int rigthErrorMargin = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
+    int leftErrorMargin = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
+    if (leftErrorMargin < ERROR_THRESHOLD && rigthErrorMargin < ERROR_THRESHOLD)
+      return true;
+    return false;
+
+  }
+
+  private void stopRobot() {
+    right.setPower(0);
+    left.setPower(0);
   }
 }
