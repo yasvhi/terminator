@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
@@ -22,14 +23,14 @@ public class Autonomous extends ETBaseOpMode {
     left = hardwareMap.dcMotor.get("Left");
     right.setDirection(DcMotor.Direction.REVERSE);
 
-    right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-    left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     telemetry.addData("Reset Encoders", "Done");
     right.setTargetPosition((int) COUNTS);
     left.setTargetPosition((int) COUNTS);
 
-    right.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-    left.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+    right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+    left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
     telemetry.addData("Running to Target", "Started");
 
     telemetry.addData("Motor Target", COUNTS);
@@ -39,7 +40,6 @@ public class Autonomous extends ETBaseOpMode {
     right.setPower(0.5);
     left.setPower(0.5);
     telemetry.addData("Power Set", "true");
-    telemetry.addData("Motor Power", "0.5");
 
     telemetry.addData("Motor Target", COUNTS);
     telemetry.addData("Left Position", left.getCurrentPosition());
@@ -51,13 +51,15 @@ public class Autonomous extends ETBaseOpMode {
     telemetry.addData("Motor Target", COUNTS);
     telemetry.addData("Left Position", left.getCurrentPosition());
     telemetry.addData("Right Position", right.getCurrentPosition());
+    telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
+    telemetry.addData("Right Motor Power", Double.toString(left.getPower()));
     int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
 
     if (error < ERROR_THRESHOLD) {
-        right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         telemetry.addData("Final Reset", "Done");
-        break;
+        etBreakLoop();
     }
   }
 }
