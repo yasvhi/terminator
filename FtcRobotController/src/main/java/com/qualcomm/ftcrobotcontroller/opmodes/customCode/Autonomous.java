@@ -25,7 +25,7 @@ public class Autonomous extends ETBaseOpMode {
 
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    telemetry.addData("Reset Encoders", "Done");
+    //telemetry.addData("Reset Encoders", "Done");
     right.setTargetPosition((int) COUNTS);
     left.setTargetPosition((int) COUNTS);
 
@@ -37,8 +37,8 @@ public class Autonomous extends ETBaseOpMode {
     telemetry.addData("Left Position", left.getCurrentPosition());
     telemetry.addData("Right Position", right.getCurrentPosition());
 
-    right.setPower(0.5);
-    left.setPower(0.5);
+    right.setPower(0.25);
+    left.setPower(0.25);
     telemetry.addData("Power Set", "true");
 
     //telemetry.addData("Motor Target", COUNTS);
@@ -48,33 +48,42 @@ public class Autonomous extends ETBaseOpMode {
   
   @Override
   public void etLoop() throws InterruptedException {
-    telemetry.addData("Left Position", left.getCurrentPosition());
-    telemetry.addData("Right Position", right.getCurrentPosition());
-    telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
-    telemetry.addData("Right Motor Power", Double.toString(left.getPower()));
-    telemetry.addData("Motor Target", COUNTS);
+   // right.setPower(0.5);
+   // left.setPower(0.5);
+    telemetry.addData("etLoop Left Position", left.getCurrentPosition());
+    telemetry.addData("etLoop Right Position", right.getCurrentPosition());
+   // telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
+   // telemetry.addData("Right Motor Power", Double.toString(left.getPower()));
+    telemetry.addData("etLoop Motor Target", COUNTS);
 
     //int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
 
     if (hasArrived()) {
-    //right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    //left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    telemetry.addData("Stopping Robot", "Done");
-      stopRobot();
+      right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+      left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+      telemetry.addData("Stopping Robot", "Done");
+      //stopRobot();
     }
   }
 
   private boolean hasArrived() {
-    int rigthErrorMargin = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
-    int leftErrorMargin = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
-    if (leftErrorMargin < ERROR_THRESHOLD && rigthErrorMargin < ERROR_THRESHOLD)
+    int absRight = Math.abs(right.getCurrentPosition());
+    int absLeft = Math.abs(left.getCurrentPosition());
+    int rigthErrorMargin = Math.abs(absRight - (int) COUNTS);
+    int leftErrorMargin = Math.abs(absLeft - (int) COUNTS);
+    telemetry.addData("rigthErrorMargin", rigthErrorMargin);
+    telemetry.addData("leftErrorMargin", leftErrorMargin);
+    telemetry.addData("COUNTS", COUNTS);
+    if (leftErrorMargin < ERROR_THRESHOLD && rigthErrorMargin < ERROR_THRESHOLD) {
+      telemetry.addData("hasArrived", "true");
       return true;
+    }
     return false;
 
   }
 
   private void stopRobot() {
     right.setPower(0);
-    left.setPower(0);
+    //left.setPower(0);
   }
 }
