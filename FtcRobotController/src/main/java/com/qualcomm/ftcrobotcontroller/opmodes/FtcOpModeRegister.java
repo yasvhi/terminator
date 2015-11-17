@@ -31,9 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.customCode.MainAutonomous;
-import com.qualcomm.ftcrobotcontroller.opmodes.customCode.Movement;
-import com.qualcomm.ftcrobotcontroller.opmodes.customCode.Teleop;
+import com.qualcomm.ftcrobotcontroller.opmodes.customCode.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -65,9 +63,9 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("K9Line", K9Line.class);
     manager.register ("PushBotAuto", PushBotAuto.class);
     manager.register ("PushBotManual", PushBotManual.class);
-    manager.register("Teleop", Teleop.class);
-    manager.register("Movement", Movement.class);
-    manager.register("MainAutonomous", MainAutonomous.class);
+    manager.register("Climbing Pros", Teleop.class);
+    // manager.register("Movement", Movement.class);
+    manager.register("Good Autonomous eku952 richiksc scs075 yashvi", Autonomous.class);
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.

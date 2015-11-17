@@ -17,6 +17,10 @@ public class ETBaseOpMode extends LinearOpMode {
 
   }
 
+  public void etBreakLoop() throws InterruptedException {
+    loopBreaker = true;
+  }
+
   @Override
   public void runOpMode()  throws InterruptedException {
     etInit();
@@ -24,6 +28,9 @@ public class ETBaseOpMode extends LinearOpMode {
     etSetup();
     while(opModeIsActive()) {
       etLoop();
+      if(loopBreaker) {
+        break;
+      }
     }
     etCleanup();
   }
