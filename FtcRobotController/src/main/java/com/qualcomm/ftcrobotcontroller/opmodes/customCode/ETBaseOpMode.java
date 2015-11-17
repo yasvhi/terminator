@@ -24,7 +24,6 @@ public class ETBaseOpMode extends LinearOpMode {
     etSetup();
     while(opModeIsActive()) {
       etLoop();
-      waitForNextHardwareCycle();
     }
     etCleanup();
   }
