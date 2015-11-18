@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 
 public class Teleop extends OpMode {
@@ -19,6 +20,9 @@ public class Teleop extends OpMode {
         Left = hardwareMap.dcMotor.get("Left");
         servoR = hardwareMap.servo.get("ServoR");
         servoL = hardwareMap.servo.get("ServoL");
+        servoR.setPosition(0);
+        servoL.setPosition(0);
+        servoR.setDirection(Servo.Direction.REVERSE);
         //backRight = hardwareMap.dcMotor.get("Back_Right");
         //backLeft = hardwareMap.dcMotor.get("Back_Left");
 
@@ -33,7 +37,8 @@ public class Teleop extends OpMode {
         float rightY = -gamepad1.right_stick_y;
         boolean toggled = false;
         double factor = 0.25;
-        double servoPosition = 0;
+        //double servoPositionR = 0;
+        //double servoPositionL = 0;
 
         if(gamepad1.right_bumper || gamepad1.left_bumper) {
             toggled = true;
@@ -48,11 +53,24 @@ public class Teleop extends OpMode {
             factor = gamepad1.right_trigger;
 
         telemetry.addData("Power Factor", factor);
-        telemetry.addData("Servo", servoPosition);
+        //telemetry.addData("ServoR", servoPositionR);
+        //telemetry.addData("ServoL", servoPositionL);
         Right.setPower(rightY * factor);
         Left.setPower(leftY * factor);
 
         if(gamepad1.b) {
+          servoR.setPosition(0);
+        }
+        if(gamepad1.x) {
+          servoR.setPosition(-0.3);
+        }
+        if(gamepad1.y) {
+          servoL.setPosition(0);
+        }
+        if(gamepad1.a) {
+          servoL.setPosition(-0.3);
+        }
+        /*if(gamepad1.b) {
           if(gamepad1.dpad_up) {
             servoPosition++;
           }
@@ -69,6 +87,6 @@ public class Teleop extends OpMode {
             servoPosition--;
           }
           servoL.setPosition(servoPosition);
-        }
+        }*/
     }
 }
