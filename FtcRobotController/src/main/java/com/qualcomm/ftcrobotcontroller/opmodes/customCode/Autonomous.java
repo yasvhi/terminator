@@ -12,9 +12,8 @@ public class Autonomous extends ETBaseOpMode {
   final static double GEAR_RATIO = 1;     //gear ratio
   final static double WHEEL_DIAMETER = 2.625;     //diameter of wheel
   final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
-  final static int DISTANCE = 5;
-  final static double ROTATIONS = DISTANCE / CIRCUMFERENCE;
-  final static double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
+  int distance = 20;
+  double counts;
   final static int ERROR_THRESHOLD = 10;
 
   @Override
@@ -23,17 +22,19 @@ public class Autonomous extends ETBaseOpMode {
     left = hardwareMap.dcMotor.get("Left");
     right.setDirection(DcMotor.Direction.REVERSE);
 
+    this.counts = getCountsForDistance(distance);
+
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    //telemetry.addData("Reset Encoders", "Done");
-    right.setTargetPosition((int) COUNTS);
-    left.setTargetPosition((int) COUNTS);
+    telemetry.addData("Reset Encoders", "Done");
+    right.setTargetPosition((int) counts);
+    left.setTargetPosition((int) counts);
 
     right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
     left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
     telemetry.addData("Running to Target", "Started");
 
-    telemetry.addData("Motor Target", COUNTS);
+    telemetry.addData("Motor Target", counts);
     telemetry.addData("Left Position", left.getCurrentPosition());
     telemetry.addData("Right Position", right.getCurrentPosition());
 
@@ -48,42 +49,45 @@ public class Autonomous extends ETBaseOpMode {
   
   @Override
   public void etLoop() throws InterruptedException {
-   // right.setPower(0.5);
-   // left.setPower(0.5);
-    telemetry.addData("etLoop Left Position", left.getCurrentPosition());
-    telemetry.addData("etLoop Right Position", right.getCurrentPosition());
-   // telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
-   // telemetry.addData("Right Motor Power", Double.toString(left.getPower()));
-    telemetry.addData("etLoop Motor Target", COUNTS);
+    telemetry.addData("Left Position", left.getCurrentPosition());
+    telemetry.addData("Right Position", right.getCurrentPosition());
+    telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
+    telemetry.addData("Left Motor Power", Double.toString(left.getPower()));
+    telemetry.addData("Motor Target", counts);
 
     //int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
 
-    if (hasArrived()) {
-      right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-      left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-      telemetry.addData("Stopping Robot", "Done");
-      //stopRobot();
+    if(!hasArrived(20))
+      return;
+    telemetry.addData("hasArrived 20", "true");
+    stopRobot();
+    this.distance = 30;
+    if (hasArrived(30)) {
+      telemetry.addData("hasArrived 30", "true");
+      stopRobot();
+      telemetry.addData("Robot Stopped", "true");
+      etBreakLoop();
+
     }
   }
 
-  private boolean hasArrived() {
-    int absRight = Math.abs(right.getCurrentPosition());
-    int absLeft = Math.abs(left.getCurrentPosition());
-    int rigthErrorMargin = Math.abs(absRight - (int) COUNTS);
-    int leftErrorMargin = Math.abs(absLeft - (int) COUNTS);
-    telemetry.addData("rigthErrorMargin", rigthErrorMargin);
-    telemetry.addData("leftErrorMargin", leftErrorMargin);
-    telemetry.addData("COUNTS", COUNTS);
-    if (leftErrorMargin < ERROR_THRESHOLD && rigthErrorMargin < ERROR_THRESHOLD) {
-      telemetry.addData("hasArrived", "true");
+  private boolean hasArrived(int dist) {
+    double cts = getCountsForDistance(dist);
+    int rightErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
+    int leftErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
+    if (leftErrorMargin < ERROR_THRESHOLD && rightErrorMargin < ERROR_THRESHOLD)
       return true;
-    }
     return false;
 
   }
 
   private void stopRobot() {
-    right.setPower(0);
-    //left.setPower(0);
+    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+  }
+
+  private double getCountsForDistance(int distance) {
+    double rotations = distance / CIRCUMFERENCE;
+    return ENCODER_CPR * rotations * GEAR_RATIO;
   }
 }
