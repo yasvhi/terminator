@@ -2,11 +2,15 @@ package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 
 public class Teleop extends OpMode {
     private DcMotor Right;
     private DcMotor Left;
+    private Servo servoR;
+    private Servo servoL;
     //private DcMotor backRight;
     //private DcMotor backLeft;
 
@@ -14,11 +18,17 @@ public class Teleop extends OpMode {
     public void init() {
         Right = hardwareMap.dcMotor.get("Right");
         Left = hardwareMap.dcMotor.get("Left");
+        servoR = hardwareMap.servo.get("ServoR");
+        servoL = hardwareMap.servo.get("ServoL");
+        servoR.setPosition(0);
+        servoL.setPosition(0);
+        servoR.setDirection(Servo.Direction.REVERSE);
         //backRight = hardwareMap.dcMotor.get("Back_Right");
         //backLeft = hardwareMap.dcMotor.get("Back_Left");
 
         Right.setDirection(DcMotor.Direction.REVERSE);
         //backRight.setDirection(DcMotor.Direction.REVERSE);
+
     }
 
     @Override
@@ -26,9 +36,12 @@ public class Teleop extends OpMode {
         float leftY = -gamepad1.left_stick_y;
         float rightY = -gamepad1.right_stick_y;
         boolean toggled = false;
+        double factor = 0.25;
+        //double servoPositionR = 0;
+        //double servoPositionL = 0;
 
-        if(gamepad1.right_trigger > 0.8 || gamepad1.left_trigger > 0.8) {
-            toggled = !toggled;
+        if(gamepad1.right_bumper || gamepad1.left_bumper) {
+            toggled = true;
         }
         telemetry.addData("Inverted Controls", (toggled ? "On":"Off"));
         if(toggled) {
@@ -36,8 +49,44 @@ public class Teleop extends OpMode {
             rightY = gamepad1.right_stick_y;
         }
 
-        telemetry.addData("Power Factor", .25);
-        Right.setPower(rightY * .25);
-        Left.setPower(leftY * .25);
+        if(gamepad1.right_trigger > 0.25)
+            factor = gamepad1.right_trigger;
+
+        telemetry.addData("Power Factor", factor);
+        //telemetry.addData("ServoR", servoPositionR);
+        //telemetry.addData("ServoL", servoPositionL);
+        Right.setPower(rightY * factor);
+        Left.setPower(leftY * factor);
+
+        if(gamepad1.b) {
+          servoR.setPosition(0);
+        }
+        if(gamepad1.x) {
+          servoR.setPosition(-0.3);
+        }
+        if(gamepad1.y) {
+          servoL.setPosition(0);
+        }
+        if(gamepad1.a) {
+          servoL.setPosition(-0.3);
+        }
+        /*if(gamepad1.b) {
+          if(gamepad1.dpad_up) {
+            servoPosition++;
+          }
+          else if(gamepad1.dpad_down) {
+            servoPosition--;
+          }
+          servoR.setPosition(servoPosition);
+        }
+        if(gamepad1.x) {
+          if ((gamepad1.dpad_up)) {
+            servoPosition++;
+          }
+          else if(gamepad1.dpad_down) {
+            servoPosition--;
+          }
+          servoL.setPosition(servoPosition);
+        }*/
     }
 }
