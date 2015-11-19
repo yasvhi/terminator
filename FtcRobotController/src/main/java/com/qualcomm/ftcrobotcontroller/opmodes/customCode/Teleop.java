@@ -3,7 +3,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 
 public class Teleop extends OpMode {
@@ -70,23 +69,5 @@ public class Teleop extends OpMode {
         if(gamepad1.a) {
           servoL.setPosition(-0.3);
         }
-        /*if(gamepad1.b) {
-          if(gamepad1.dpad_up) {
-            servoPosition++;
-          }
-          else if(gamepad1.dpad_down) {
-            servoPosition--;
-          }
-          servoR.setPosition(servoPosition);
-        }
-        if(gamepad1.x) {
-          if ((gamepad1.dpad_up)) {
-            servoPosition++;
-          }
-          else if(gamepad1.dpad_down) {
-            servoPosition--;
-          }
-          servoL.setPosition(servoPosition);
-        }*/
     }
 }
