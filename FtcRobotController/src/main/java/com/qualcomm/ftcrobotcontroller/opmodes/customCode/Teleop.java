@@ -19,8 +19,8 @@ public class Teleop extends OpMode {
         Left = hardwareMap.dcMotor.get("Left");
         servoR = hardwareMap.servo.get("ServoR");
         servoL = hardwareMap.servo.get("ServoL");
-        servoR.setPosition(0);
-        servoL.setPosition(0);
+        servoR.setPosition(0.5);
+        servoL.setPosition(0.5);
         servoR.setDirection(Servo.Direction.REVERSE);
         //backRight = hardwareMap.dcMotor.get("Back_Right");
         //backLeft = hardwareMap.dcMotor.get("Back_Left");
@@ -58,16 +58,16 @@ public class Teleop extends OpMode {
         Left.setPower(leftY * factor);
 
         if(gamepad1.b) {
-          servoR.setPosition(0);
+          servoR.setPosition(0.1);
         }
         if(gamepad1.x) {
-          servoR.setPosition(-0.3);
+          servoR.setPosition(0.5);
         }
         if(gamepad1.y) {
-          servoL.setPosition(0);
+          servoL.setPosition(0.1);
         }
         if(gamepad1.a) {
-          servoL.setPosition(-0.3);
+          servoL.setPosition(0.5);
         }
     }
 }

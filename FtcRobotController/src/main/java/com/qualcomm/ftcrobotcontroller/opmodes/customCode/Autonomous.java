@@ -57,10 +57,10 @@ public class Autonomous extends ETBaseOpMode {
 
         setTarget();
         if(hasArrived(counts))
-          stage = STAGE_MOVE_10;
+          stage = STAGE_TURN_LEFT;
         break;
       }
-      case 10: {
+      case STAGE_MOVE_10: {
         counts = getCountsForDistance(10);
 
         setTarget();
@@ -68,6 +68,16 @@ public class Autonomous extends ETBaseOpMode {
           stage = STAGE_STOP;
         break;
 
+      }
+
+      case STAGE_TURN_LEFT:{
+        right.setPower(0.25);
+        left.setPower(-0.25);
+        sleep(3000);
+        right.setPower(0);
+        left.setPower(0);
+        stage = STAGE_MOVE_10;
+        break;
       }
 
       case STAGE_STOP: {
