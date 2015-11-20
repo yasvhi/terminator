@@ -33,5 +33,6 @@ public class ETBaseOpMode extends LinearOpMode {
       }
     }
     etCleanup();
+    this.stop();
   }
 }

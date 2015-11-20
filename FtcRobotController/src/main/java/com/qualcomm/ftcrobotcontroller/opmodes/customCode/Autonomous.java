@@ -16,39 +16,17 @@ public class Autonomous extends ETBaseOpMode {
   double counts;
   final static int ERROR_THRESHOLD = 10;
 
+  private static boolean isTargetSet = false;
+
   @Override
   public void etSetup() throws InterruptedException {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     right.setDirection(DcMotor.Direction.REVERSE);
 
-    //this.counts = getCountsForDistance(distance);
-
-    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-
-    runDistance();
-    /*telemetry.addData("Reset Encoders", "Done");
-    right.setTargetPosition((int) counts);
-    left.setTargetPosition((int) counts);
-
-    right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-    left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-    telemetry.addData("Running to Target", "Started");
-
-    telemetry.addData("Motor Target", counts);
-    telemetry.addData("Left Position", left.getCurrentPosition());
-    telemetry.addData("Right Position", right.getCurrentPosition());
-
-    right.setPower(0.25);
-    left.setPower(0.25);
-    telemetry.addData("Power Set", "true");
-*/
-    //telemetry.addData("Motor Target", COUNTS);
-    //telemetry.addData("Left Position", left.getCurrentPosition());
-    //telemetry.addData("Right Position", right.getCurrentPosition());
   }
-  
+
+
   @Override
   public void etLoop() throws InterruptedException {
     telemetry.addData("Left Position", left.getCurrentPosition());
@@ -57,34 +35,39 @@ public class Autonomous extends ETBaseOpMode {
     telemetry.addData("Left Motor Power", Double.toString(left.getPower()));
     telemetry.addData("Motor Target", counts);
 
-    //int error = Math.abs(right.getCurrentPosition()) - (int) COUNTS;
 
-    if(!hasArrived(5))
+
+    // go 20 and then stop
+      // setTarget for 20
+
+    setTarget(20);
+    // goToTarget()
+    goToTarget();
+    // loop until 20 is reached
+    if(!hasArrived(20))
       return;
-    telemetry.addData("hasArrived 5", "true");
-    right.setPower(0);
-    left.setPower(0);
-    stopRobot();
-    this.distance = 10;
-    distance = 10;
-    runDistance();
-    if (hasArrived(10)) {
-      telemetry.addData("hasArrived 10", "true");
-      right.setPower(0);
-      left.setPower(0);
-      stopRobot();
-      telemetry.addData("Robot Stopped", "true");
-      etBreakLoop();
+    telemetry.addData("hasArrived 20", "true");
 
-    }
+    // go to 10 and then stop
+    setTarget(10);
+    // goToTarget()
+    goToTarget();
+    // loop until 20 is reached
+    if(!hasArrived(10))
+      return;
+    telemetry.addData("hasArrived 10", "true");
+    stopRobot();
+
   }
 
   private boolean hasArrived(int dist) {
     double cts = getCountsForDistance(dist);
     int rightErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
     int leftErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
-    if (leftErrorMargin < ERROR_THRESHOLD && rightErrorMargin < ERROR_THRESHOLD)
+    if (leftErrorMargin < ERROR_THRESHOLD && rightErrorMargin < ERROR_THRESHOLD) {
+      isTargetSet = false;
       return true;
+    }
     return false;
 
   }
@@ -92,7 +75,7 @@ public class Autonomous extends ETBaseOpMode {
   private void stopRobot() throws InterruptedException {
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
+    etBreakLoop();
   }
 
   private double getCountsForDistance(int distance) {
@@ -100,17 +83,24 @@ public class Autonomous extends ETBaseOpMode {
     return ENCODER_CPR * rotations * GEAR_RATIO;
   }
 
-  private void runDistance() {
-    this.counts = getCountsForDistance(distance);
-
+  private void setTarget(int distance) {
+    if (isTargetSet) {
+      return;
+    }
+    double counts = getCountsForDistance(distance);
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     telemetry.addData("Reset Encoders", "Done");
+
     right.setTargetPosition((int) counts);
     left.setTargetPosition((int) counts);
-
     right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
     left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+    isTargetSet = true;
+  }
+
+  private void goToTarget() {
+
     telemetry.addData("Running to Target", "Started");
 
     telemetry.addData("Motor Target", counts);
