@@ -12,7 +12,7 @@ public class Autonomous extends ETBaseOpMode {
   final static double GEAR_RATIO = 1;     //gear ratio
   final static double WHEEL_DIAMETER = 2.625;     //diameter of wheel
   final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
-  int distance = 20;
+  int distance = 5;
   double counts;
   final static int ERROR_THRESHOLD = 10;
 
@@ -25,7 +25,6 @@ public class Autonomous extends ETBaseOpMode {
     right.setDirection(DcMotor.Direction.REVERSE);
 
   }
-
 
 
   @Override
@@ -58,7 +57,6 @@ public class Autonomous extends ETBaseOpMode {
       return;
     telemetry.addData("hasArrived 10", "true");
     stopRobot();
-
 
   }
 
