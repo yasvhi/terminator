@@ -14,17 +14,26 @@ public class Autonomous extends ETBaseOpMode {
   final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
   //int distance = 5;
   final static int ERROR_THRESHOLD = 10;
+  final static int STAGE_MOVE_20 = 20;
+  final static int STAGE_MOVE_10 = 10;
+  final static int STAGE_TURN_LEFT = 90; // case 90 :)
+  final static int STAGE_STOP = 100;
 
   private static boolean isTargetSet = false;
-  private static  double counts = 0;
+  private static double counts = 0;
 
-  private static int stage = 20;
+  private static int stage;
 
   @Override
-  public void etSetup() throws InterruptedException {
+  public void etInit() throws InterruptedException {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     right.setDirection(DcMotor.Direction.REVERSE);
+  }
+
+  @Override
+  public void etSetup() throws InterruptedException {
+    stage = STAGE_MOVE_20;
 
   }
 
@@ -41,14 +50,14 @@ public class Autonomous extends ETBaseOpMode {
     telemetry.addData("stage", stage);
 
     switch (stage) {
-      case 20 :
+      case STAGE_MOVE_20 :
       {
         counts = getCountsForDistance(20);
         telemetry.addData("stage 20", counts);
 
         setTarget();
         if(hasArrived(counts))
-          stage = 10;
+          stage = STAGE_MOVE_10;
         break;
       }
       case 10: {
@@ -56,12 +65,12 @@ public class Autonomous extends ETBaseOpMode {
 
         setTarget();
         if(hasArrived(counts))
-          stage = 100;
+          stage = STAGE_STOP;
         break;
 
       }
 
-      case 100: {
+      case STAGE_STOP: {
         stopRobot();
         break;
       }
