@@ -12,11 +12,13 @@ public class Autonomous extends ETBaseOpMode {
   final static double GEAR_RATIO = 1;     //gear ratio
   final static double WHEEL_DIAMETER = 2.625;     //diameter of wheel
   final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
-  int distance = 5;
-  double counts;
+  //int distance = 5;
   final static int ERROR_THRESHOLD = 10;
 
   private static boolean isTargetSet = false;
+  private static  double counts = 0;
+
+  private static int stage = 20;
 
   @Override
   public void etSetup() throws InterruptedException {
@@ -29,43 +31,54 @@ public class Autonomous extends ETBaseOpMode {
 
   @Override
   public void etLoop() throws InterruptedException {
+    /*
     telemetry.addData("Left Position", left.getCurrentPosition());
     telemetry.addData("Right Position", right.getCurrentPosition());
     telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
     telemetry.addData("Left Motor Power", Double.toString(left.getPower()));
-    telemetry.addData("Motor Target", counts);
+*/
 
+    telemetry.addData("stage", stage);
 
+    switch (stage) {
+      case 20 :
+      {
+        counts = getCountsForDistance(20);
+        telemetry.addData("stage 20", counts);
 
-    // go 20 and then stop
-      // setTarget for 20
+        setTarget();
+        if(hasArrived(counts))
+          stage = 10;
+        break;
+      }
+      case 10: {
+        counts = getCountsForDistance(10);
 
-    setTarget(20);
-    // goToTarget()
-    goToTarget();
-    // loop until 20 is reached
-    if(!hasArrived(20))
-      return;
-    telemetry.addData("hasArrived 20", "true");
+        setTarget();
+        if(hasArrived(counts))
+          stage = 100;
+        break;
 
-    // go to 10 and then stop
-    setTarget(10);
-    // goToTarget()
-    goToTarget();
-    // loop until 20 is reached
-    if(!hasArrived(10))
-      return;
-    telemetry.addData("hasArrived 10", "true");
-    stopRobot();
+      }
 
+      case 100: {
+        stopRobot();
+        break;
+      }
+    }
   }
 
-  private boolean hasArrived(int dist) {
-    double cts = getCountsForDistance(dist);
+  private boolean hasArrived(double cts) {
+    //telemetry.addData("cts", cts);
+    telemetry.addData("Left Position", left.getCurrentPosition());
+    telemetry.addData("Right Position", right.getCurrentPosition());
+    telemetry.addData("cts", cts);
+
     int rightErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
     int leftErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
     if (leftErrorMargin < ERROR_THRESHOLD && rightErrorMargin < ERROR_THRESHOLD) {
       isTargetSet = false;
+      telemetry.addData("hasArrived", cts);
       return true;
     }
     return false;
@@ -75,6 +88,7 @@ public class Autonomous extends ETBaseOpMode {
   private void stopRobot() throws InterruptedException {
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    waitOneFullHardwareCycle();
     etBreakLoop();
   }
 
@@ -83,32 +97,26 @@ public class Autonomous extends ETBaseOpMode {
     return ENCODER_CPR * rotations * GEAR_RATIO;
   }
 
-  private void setTarget(int distance) {
-    if (isTargetSet) {
+  private synchronized void  setTarget() throws InterruptedException {
+    if(isTargetSet)
       return;
-    }
-    double counts = getCountsForDistance(distance);
+
+    //telemetry.addData("setTarget ", distance);
+
+    //double cts = getCountsForDistance(distance);
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    waitOneFullHardwareCycle();
     telemetry.addData("Reset Encoders", "Done");
 
     right.setTargetPosition((int) counts);
     left.setTargetPosition((int) counts);
     right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
     left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-    isTargetSet = true;
-  }
-
-  private void goToTarget() {
-
-    telemetry.addData("Running to Target", "Started");
-
-    telemetry.addData("Motor Target", counts);
-    telemetry.addData("Left Position", left.getCurrentPosition());
-    telemetry.addData("Right Position", right.getCurrentPosition());
-
     right.setPower(0.25);
     left.setPower(0.25);
-    telemetry.addData("Power Set", "true");
+    isTargetSet = true;
+    //return cts;
   }
+
 }

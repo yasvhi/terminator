@@ -26,13 +26,16 @@ public class ETBaseOpMode extends LinearOpMode {
     etInit();
     waitForStart();
     etSetup();
+    int i = 0;
     while(opModeIsActive()) {
+      //telemetry.addData("etLoop ", i++);
       etLoop();
       if(loopBreaker) {
         break;
       }
+      waitOneFullHardwareCycle();
     }
     etCleanup();
-    this.stop();
+    //this.stop();
   }
 }
