@@ -16,13 +16,15 @@ public class Autonomous extends ETBaseOpMode {
   final static int ERROR_THRESHOLD = 10;
   final static int STAGE_MOVE_20 = 20;
   final static int STAGE_MOVE_10 = 10;
-  final static int STAGE_TURN_LEFT = 90; // case 90 :)
+  final static int STAGE_TURN_RIGHT = 90; // case 90 :)
+  final static int STAGE_TURN_RIGHT2 = 80; // case 80
   final static int STAGE_STOP = 100;
 
   private static boolean isTargetSet = false;
   private static double counts = 0;
 
   private static int stage;
+  private static boolean isTurnTargetSet = false;
 
   @Override
   public void etInit() throws InterruptedException {
@@ -52,16 +54,16 @@ public class Autonomous extends ETBaseOpMode {
     switch (stage) {
       case STAGE_MOVE_20 :
       {
-        counts = getCountsForDistance(20);
+        counts = getCountsForDistance(12);
         telemetry.addData("stage 20", counts);
 
         setTarget();
         if(hasArrived(counts))
-          stage = STAGE_TURN_LEFT;
+          stage = STAGE_TURN_RIGHT;
         break;
       }
       case STAGE_MOVE_10: {
-        counts = getCountsForDistance(10);
+        counts = getCountsForDistance(5);
 
         setTarget();
         if(hasArrived(counts))
@@ -70,13 +72,38 @@ public class Autonomous extends ETBaseOpMode {
 
       }
 
-      case STAGE_TURN_LEFT:{
+      case STAGE_TURN_RIGHT: {
+
+        double trc = getCountsForDistance(5);
+        if(isTurnTargetSet) {
+          waitOneFullHardwareCycle();
+          right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+          left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+          waitOneFullHardwareCycle();
+          right.setTargetPosition((int) trc);
+          left.setTargetPosition((int) -trc);
+          isTurnTargetSet = true;
+        }
         right.setPower(0.25);
         left.setPower(-0.25);
-        sleep(3000);
-        right.setPower(0);
-        left.setPower(0);
-        stage = STAGE_MOVE_10;
+        if(Math.abs(Math.abs(right.getCurrentPosition()) - (int) trc) < 0.1) {
+          right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+          left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+          waitOneFullHardwareCycle();
+          isTurnTargetSet = false;
+          stage = STAGE_MOVE_10;
+        }
+
+        break;
+      }
+
+      case STAGE_TURN_RIGHT2:{
+        right.setPower(-0.25);
+        left.setPower(0.25);
+        sleep(500);
+        right.setPower(0.25);
+        wait(3000);
+        stage = STAGE_STOP;
         break;
       }
 
@@ -111,7 +138,7 @@ public class Autonomous extends ETBaseOpMode {
     etBreakLoop();
   }
 
-  private double getCountsForDistance(int distance) {
+  private double getCountsForDistance(double distance) {
     double rotations = distance / CIRCUMFERENCE;
     return ENCODER_CPR * rotations * GEAR_RATIO;
   }

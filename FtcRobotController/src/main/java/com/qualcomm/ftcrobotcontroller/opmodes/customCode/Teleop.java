@@ -58,7 +58,7 @@ public class Teleop extends OpMode {
         Left.setPower(leftY * factor);
 
         if(gamepad1.b) {
-          servoR.setPosition(0.1);
+          servoR.setPosition(0.15);
         }
         if(gamepad1.x) {
           servoR.setPosition(0.5);
