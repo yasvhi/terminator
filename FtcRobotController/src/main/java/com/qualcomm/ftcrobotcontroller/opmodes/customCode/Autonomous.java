@@ -90,11 +90,14 @@ public class Autonomous extends ETBaseOpMode {
         telemetry.addData("Started Turning rightSetPower0, power:", right.getPower());
         left.setPower(0.25);
         telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-
+        waitOneFullHardwareCycle();
+        telemetry.addData("sleep 3000", "starting");
         sleep(3000);
         telemetry.addData("sleep 3000", "done");
+        waitOneFullHardwareCycle();
         right.setPowerFloat();
         left.setPowerFloat();
+        telemetry.addData("setPowerFloat", "true");
 
         /*
         if(Math.abs(Math.abs(right.getCurrentPosition()) - (int) trc) < 0.1) {
