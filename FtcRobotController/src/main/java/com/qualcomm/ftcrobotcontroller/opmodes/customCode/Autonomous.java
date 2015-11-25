@@ -62,39 +62,25 @@ public class Autonomous extends ETBaseOpMode {
           stage = STAGE_TURN_RIGHT;
         break;
       }
-      case STAGE_MOVE_10: {
-        counts = getCountsForDistance(5);
-
-        setTarget();
-        if(hasArrived(counts))
-          stage = STAGE_STOP;
-        break;
-
-      }
 
       case STAGE_TURN_RIGHT: {
-/*
-
-        double trc = getCountsForDistance(5);
-        if(isTurnTargetSet) {
-          waitOneFullHardwareCycle();
-          right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-          left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-          waitOneFullHardwareCycle();
-          right.setTargetPosition((int) trc);
-          left.setTargetPosition((int) -trc);
-          isTurnTargetSet = true;
-        }
-*/
+        right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        waitOneFullHardwareCycle();
+        right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         right.setPower(0);
         telemetry.addData("Started Turning rightSetPower0, power:", right.getPower());
         left.setPower(0.25);
         telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-
+        // waitOneFullHardwareCycle();
+        telemetry.addData("sleep 3000", "starting");
         sleep(3000);
         telemetry.addData("sleep 3000", "done");
+        // waitOneFullHardwareCycle();
         right.setPowerFloat();
         left.setPowerFloat();
+        telemetry.addData("setPowerFloat", "true");
 
         /*
         if(Math.abs(Math.abs(right.getCurrentPosition()) - (int) trc) < 0.1) {
@@ -108,6 +94,17 @@ public class Autonomous extends ETBaseOpMode {
         stage = STAGE_MOVE_10;
 
         break;
+      }
+
+      case STAGE_MOVE_10: {
+        counts = getCountsForDistance(5);
+
+        setTarget();
+
+        if(hasArrived(counts))
+          stage = STAGE_STOP;
+        break;
+
       }
 
       case STAGE_TURN_RIGHT2:{
