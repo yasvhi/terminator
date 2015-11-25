@@ -73,6 +73,7 @@ public class Autonomous extends ETBaseOpMode {
       }
 
       case STAGE_TURN_RIGHT: {
+/*
 
         double trc = getCountsForDistance(5);
         if(isTurnTargetSet) {
@@ -84,8 +85,18 @@ public class Autonomous extends ETBaseOpMode {
           left.setTargetPosition((int) -trc);
           isTurnTargetSet = true;
         }
-        right.setPower(0.25);
-        left.setPower(-0.25);
+*/
+        right.setPower(0);
+        telemetry.addData("Started Turning rightSetPower0, power:", right.getPower());
+        left.setPower(0.25);
+        telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
+
+        sleep(3000);
+        telemetry.addData("sleep 3000", "done");
+        right.setPowerFloat();
+        left.setPowerFloat();
+
+        /*
         if(Math.abs(Math.abs(right.getCurrentPosition()) - (int) trc) < 0.1) {
           right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
           left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -93,6 +104,8 @@ public class Autonomous extends ETBaseOpMode {
           isTurnTargetSet = false;
           stage = STAGE_MOVE_10;
         }
+*/
+        stage = STAGE_MOVE_10;
 
         break;
       }
