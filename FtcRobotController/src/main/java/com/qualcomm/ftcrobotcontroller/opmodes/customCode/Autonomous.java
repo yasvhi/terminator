@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
@@ -14,10 +13,12 @@ public class Autonomous extends ETBaseOpMode {
   final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
   //int distance = 5;
   final static int ERROR_THRESHOLD = 10;
-  final static int STAGE_MOVE_20 = 20;
-  final static int STAGE_MOVE_10 = 10;
-  final static int STAGE_TURN_RIGHT = 90; // case 90 :)
-  final static int STAGE_TURN_RIGHT2 = 80; // case 80
+
+  //CONTROL STAGES
+  final static int STAGE_MOVE_FIRST = 1;
+  final static int STAGE_MOVE_SECOND = 2;
+  final static int STAGE_TURN_RIGHT = 3;
+  final static int STAGE_TURN_RIGHT2 = 4;
   final static int STAGE_STOP = 100;
 
   private static boolean isTargetSet = false;
@@ -30,29 +31,23 @@ public class Autonomous extends ETBaseOpMode {
   public void etInit() throws InterruptedException {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
-    right.setDirection(DcMotor.Direction.REVERSE);
+    left.setDirection(DcMotor.Direction.REVERSE);
   }
 
   @Override
   public void etSetup() throws InterruptedException {
-    stage = STAGE_MOVE_20;
+    stage = STAGE_MOVE_FIRST;
 
   }
 
 
   @Override
   public void etLoop() throws InterruptedException {
-    /*
-    telemetry.addData("Left Position", left.getCurrentPosition());
-    telemetry.addData("Right Position", right.getCurrentPosition());
-    telemetry.addData("Right Motor Power", Double.toString(right.getPower()));
-    telemetry.addData("Left Motor Power", Double.toString(left.getPower()));
-*/
 
     telemetry.addData("stage", stage);
 
     switch (stage) {
-      case STAGE_MOVE_20 :
+      case STAGE_MOVE_FIRST:
       {
         counts = getCountsForDistance(12);
         telemetry.addData("stage 20", counts);
@@ -64,43 +59,15 @@ public class Autonomous extends ETBaseOpMode {
       }
 
       case STAGE_TURN_RIGHT: {
-        right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        waitOneFullHardwareCycle();
-        right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        right.setPower(0);
-        telemetry.addData("Started Turning rightSetPower0, power:", right.getPower());
-        left.setPower(0.25);
-        telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-        // waitOneFullHardwareCycle();
-        telemetry.addData("sleep 3000", "starting");
-        sleep(3000);
-        telemetry.addData("sleep 3000", "done");
-        // waitOneFullHardwareCycle();
-        right.setPowerFloat();
-        left.setPowerFloat();
-        telemetry.addData("setPowerFloat", "true");
-
-        /*
-        if(Math.abs(Math.abs(right.getCurrentPosition()) - (int) trc) < 0.1) {
-          right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-          left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-          waitOneFullHardwareCycle();
-          isTurnTargetSet = false;
-          stage = STAGE_MOVE_10;
-        }
-*/
-        stage = STAGE_MOVE_10;
-
+        turnRight();
+        stage = STAGE_MOVE_SECOND;
         break;
       }
 
-      case STAGE_MOVE_10: {
-        counts = getCountsForDistance(5);
+      case STAGE_MOVE_SECOND: {
+        counts = getCountsForDistance(10);
 
         setTarget();
-
         if(hasArrived(counts))
           stage = STAGE_STOP;
         break;
@@ -122,6 +89,19 @@ public class Autonomous extends ETBaseOpMode {
         break;
       }
     }
+  }
+
+  private void turnRight() throws InterruptedException {
+    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    waitOneFullHardwareCycle();
+    right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+    left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+    right.setPower(0);
+    left.setPower(0.25);
+    telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
+    sleep(1500);
+
   }
 
   private boolean hasArrived(double cts) {
