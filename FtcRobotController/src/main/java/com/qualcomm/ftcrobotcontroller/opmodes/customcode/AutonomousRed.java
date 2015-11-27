@@ -1,9 +1,18 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
+/*
+ * Copyright (c) 2015 Edina Terminators Robotics
+ *
+ * This software is distributed under the MIT License. The license text can be read in full at /LICENSE.txt
+ * Authored by:
+ * Luke Langefels <https://eku952@github.com>
+ * Richik Sinha Choudhury <https://richiksc@github.com>
+ */
+
+package com.qualcomm.ftcrobotcontroller.opmodes.customcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-public class Autonomous extends ETBaseOpMode {
+public class AutonomousRed extends ETBaseOpMode {
   private DcMotor right;
   private DcMotor left;
 
@@ -17,8 +26,9 @@ public class Autonomous extends ETBaseOpMode {
   //CONTROL STAGES
   final static int STAGE_MOVE_FIRST = 1;
   final static int STAGE_MOVE_SECOND = 2;
-  final static int STAGE_TURN_RIGHT = 3;
-  final static int STAGE_TURN_RIGHT2 = 4;
+  final static int STAGE_TURN_FIRST = 3;
+  final static int STAGE_TURN_SECOND = 4;
+  final static int STAGE_REVERSE_FIRST = 5;
   final static int STAGE_STOP = 100;
 
   private static boolean isTargetSet = false;
@@ -52,14 +62,15 @@ public class Autonomous extends ETBaseOpMode {
         counts = getCountsForDistance(12);
         telemetry.addData("stage 20", counts);
 
-        setTarget();
+        setTarget(0.25);
         if(hasArrived(counts))
-          stage = STAGE_TURN_RIGHT;
+          stage = STAGE_TURN_FIRST;
         break;
       }
 
-      case STAGE_TURN_RIGHT: {
-        turnRight();
+      case STAGE_TURN_FIRST: {
+        // turns left
+        turn();
         stage = STAGE_MOVE_SECOND;
         break;
       }
@@ -67,19 +78,24 @@ public class Autonomous extends ETBaseOpMode {
       case STAGE_MOVE_SECOND: {
         counts = getCountsForDistance(10);
 
-        setTarget();
+        setTarget(0.25);
         if(hasArrived(counts))
           stage = STAGE_STOP;
         break;
 
       }
 
-      case STAGE_TURN_RIGHT2:{
-        right.setPower(-0.25);
-        left.setPower(0.25);
-        sleep(500);
-        right.setPower(0.25);
-        wait(3000);
+      case STAGE_REVERSE_FIRST: {
+        // goes -6 dst.
+        counts = getCountsForDistance(-6);
+        setTarget(-0.25);
+        stage = STAGE_TURN_SECOND;
+        break;
+      }
+
+      case STAGE_TURN_SECOND: {
+        // turns left
+        turn();
         stage = STAGE_STOP;
         break;
       }
@@ -91,13 +107,13 @@ public class Autonomous extends ETBaseOpMode {
     }
   }
 
-  private void turnRight() throws InterruptedException {
+  private void turn() throws InterruptedException {
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     waitOneFullHardwareCycle();
     right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-    right.setPower(0);
+    right.setPower(-0.25);
     left.setPower(0.25);
     telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
     sleep(1500);
@@ -133,7 +149,7 @@ public class Autonomous extends ETBaseOpMode {
     return ENCODER_CPR * rotations * GEAR_RATIO;
   }
 
-  private synchronized void  setTarget() throws InterruptedException {
+  private synchronized void  setTarget(double power) throws InterruptedException {
     if(isTargetSet)
       return;
 
@@ -149,8 +165,8 @@ public class Autonomous extends ETBaseOpMode {
     left.setTargetPosition((int) counts);
     right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
     left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-    right.setPower(0.25);
-    left.setPower(0.25);
+    right.setPower(power);
+    left.setPower(power);
     isTargetSet = true;
     //return cts;
   }
