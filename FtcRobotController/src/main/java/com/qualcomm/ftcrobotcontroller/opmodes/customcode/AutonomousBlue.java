@@ -23,18 +23,10 @@ public class AutonomousBlue extends ETBaseOpMode {
   //int distance = 5;
   final static int ERROR_THRESHOLD = 10;
 
-  //CONTROL STAGES
-  final static int STAGE_MOVE_FIRST = 1;
-  final static int STAGE_MOVE_SECOND = 2;
-  final static int STAGE_TURN_FIRST = 3;
-  final static int STAGE_TURN_SECOND = 4;
-  final static int STAGE_REVERSE_FIRST = 5;
-  final static int STAGE_STOP = 100;
 
   private static boolean isTargetSet = false;
   private static double counts = 0;
 
-  private static int stage;
   private static boolean isTurnTargetSet = false;
 
   @Override
@@ -42,14 +34,10 @@ public class AutonomousBlue extends ETBaseOpMode {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     left.setDirection(DcMotor.Direction.REVERSE);
+    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    waitOneFullHardwareCycle();
   }
-
-  @Override
-  public void etSetup() throws InterruptedException {
-    stage = STAGE_MOVE_FIRST;
-
-  }
-
 
   @Override
   public void etLoop() throws InterruptedException {
@@ -59,12 +47,23 @@ public class AutonomousBlue extends ETBaseOpMode {
     switch (stage) {
       case STAGE_MOVE_FIRST:
       {
-        counts = getCountsForDistance(12);
+        counts = getCountsForDistance(MOVE_FIRST_DISTANCE);
         telemetry.addData("stage 20", counts);
 
-        setTarget(0.25);
+        setTarget(MOVE_POWER);
         if(hasArrived(counts))
+          stage = STAGE_REVERSE_FIRST;
+        break;
+      }
+
+      case STAGE_REVERSE_FIRST: {
+        // goes -6 dst.
+        counts = getCountsForDistance(REVERSE_FIRST_DISTANCE);
+        setTarget(MOVE_POWER * -1);
+        if(hasArrived(counts)) {
+          telemetry.addData("hasArrived Reverse", "true");
           stage = STAGE_TURN_FIRST;
+        }
         break;
       }
 
@@ -75,27 +74,11 @@ public class AutonomousBlue extends ETBaseOpMode {
         break;
       }
 
-      case STAGE_MOVE_SECOND: {
-        counts = getCountsForDistance(10);
-
-        setTarget(0.25);
+      case STAGE_MOVE_SECOND : {
+        counts = getCountsForDistance(MOVE_SECOND_DISTANCE);
+        setTarget(MOVE_POWER);
         if(hasArrived(counts))
           stage = STAGE_STOP;
-        break;
-
-      }
-
-      case STAGE_REVERSE_FIRST: {
-        // goes -6 dst.
-        counts = getCountsForDistance(-6);
-        setTarget(-0.25);
-        stage = STAGE_TURN_SECOND;
-        break;
-      }
-
-      case STAGE_TURN_SECOND: {
-        turn();
-        stage = STAGE_STOP;
         break;
       }
 
@@ -115,7 +98,7 @@ public class AutonomousBlue extends ETBaseOpMode {
     right.setPower(0.25);
     left.setPower(-0.25);
     telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-    sleep(1500);
+    sleep(500);
 
   }
 
@@ -124,12 +107,13 @@ public class AutonomousBlue extends ETBaseOpMode {
     telemetry.addData("Left Position", left.getCurrentPosition());
     telemetry.addData("Right Position", right.getCurrentPosition());
     telemetry.addData("cts", cts);
+    double absCts = Math.abs(cts);
 
-    int rightErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
-    int leftErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) cts);
+
+    int rightErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) absCts);
+    int leftErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) absCts);
     if (leftErrorMargin < ERROR_THRESHOLD && rightErrorMargin < ERROR_THRESHOLD) {
       isTargetSet = false;
-      telemetry.addData("hasArrived", cts);
       return true;
     }
     return false;
