@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.customCode;
+package com.qualcomm.ftcrobotcontroller.opmodes.customcode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
