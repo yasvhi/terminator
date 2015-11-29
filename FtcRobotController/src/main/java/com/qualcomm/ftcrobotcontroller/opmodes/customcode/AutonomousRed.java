@@ -26,17 +26,17 @@ public class AutonomousRed extends ETBaseOpMode {
 
   private static boolean isTargetSet = false;
   private static double counts = 0;
-
-  private static boolean isTurnTargetSet = false;
+//  private static boolean isTurnTargetSet = false;
 
   @Override
   public void etInit() throws InterruptedException {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     left.setDirection(DcMotor.Direction.REVERSE);
+    /*waitOneFullHardwareCycle();
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
+    waitOneFullHardwareCycle();*/
   }
 
   @Override
@@ -98,7 +98,7 @@ public class AutonomousRed extends ETBaseOpMode {
     right.setPower(-0.25);
     left.setPower(0.25);
     telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-    sleep(500);
+    sleep(750);
 
   }
 

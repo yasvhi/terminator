@@ -34,9 +34,10 @@ public class AutonomousBlue extends ETBaseOpMode {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     left.setDirection(DcMotor.Direction.REVERSE);
+    /*waitOneFullHardwareCycle();
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
+    waitOneFullHardwareCycle();*/
   }
 
   @Override
@@ -98,7 +99,7 @@ public class AutonomousBlue extends ETBaseOpMode {
     right.setPower(0.25);
     left.setPower(-0.25);
     telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-    sleep(500);
+    sleep(750);
 
   }
 
