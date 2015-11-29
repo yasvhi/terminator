@@ -12,22 +12,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.customcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-public class AutonomousBlue extends ETBaseOpMode {
-  private DcMotor right;
-  private DcMotor left;
-
-  final static int ENCODER_CPR = 1440;    //encoder counts per revolution
-  final static double GEAR_RATIO = 1;     //gear ratio
-  final static double WHEEL_DIAMETER = 2.625;     //diameter of wheel
-  final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
-  //int distance = 5;
-  final static int ERROR_THRESHOLD = 10;
-
-
-  private static boolean isTargetSet = false;
-  private static double counts = 0;
-
-  private static boolean isTurnTargetSet = false;
+public class AutonomousBlue extends ETAutonomousBase {
 
   @Override
   public void etInit() throws InterruptedException {
@@ -69,7 +54,7 @@ public class AutonomousBlue extends ETBaseOpMode {
 
       case STAGE_TURN_FIRST: {
         // turns right
-        turn();
+        turn(-0.25, 0.25);
         stage = STAGE_MOVE_SECOND;
         break;
       }
@@ -88,70 +73,4 @@ public class AutonomousBlue extends ETBaseOpMode {
       }
     }
   }
-
-  private void turn() throws InterruptedException {
-    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
-    right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-    left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-    right.setPower(0.25);
-    left.setPower(-0.25);
-    telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-    sleep(500);
-
-  }
-
-  private boolean hasArrived(double cts) {
-    //telemetry.addData("cts", cts);
-    telemetry.addData("Left Position", left.getCurrentPosition());
-    telemetry.addData("Right Position", right.getCurrentPosition());
-    telemetry.addData("cts", cts);
-    double absCts = Math.abs(cts);
-
-
-    int rightErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) absCts);
-    int leftErrorMargin = Math.abs(Math.abs(right.getCurrentPosition()) - (int) absCts);
-    if (leftErrorMargin < ERROR_THRESHOLD && rightErrorMargin < ERROR_THRESHOLD) {
-      isTargetSet = false;
-      return true;
-    }
-    return false;
-
-  }
-
-  private void stopRobot() throws InterruptedException {
-    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
-    etBreakLoop();
-  }
-
-  private double getCountsForDistance(double distance) {
-    double rotations = distance / CIRCUMFERENCE;
-    return ENCODER_CPR * rotations * GEAR_RATIO;
-  }
-
-  private synchronized void  setTarget(double power) throws InterruptedException {
-    if(isTargetSet)
-      return;
-
-    //telemetry.addData("setTarget ", distance);
-
-    //double cts = getCountsForDistance(distance);
-    right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
-    telemetry.addData("Reset Encoders", "Done");
-
-    right.setTargetPosition((int) counts);
-    left.setTargetPosition((int) counts);
-    right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-    left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-    right.setPower(power);
-    left.setPower(power);
-    isTargetSet = true;
-    //return cts;
-  }
-
 }
