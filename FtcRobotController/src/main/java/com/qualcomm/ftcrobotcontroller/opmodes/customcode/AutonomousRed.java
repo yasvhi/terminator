@@ -12,6 +12,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.customcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
+
 public class AutonomousRed extends ETAutonomousBase {
 
   @Override
@@ -19,9 +20,10 @@ public class AutonomousRed extends ETAutonomousBase {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     left.setDirection(DcMotor.Direction.REVERSE);
+    /*waitOneFullHardwareCycle();
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
+    waitOneFullHardwareCycle();*/
   }
 
   @Override
@@ -73,5 +75,4 @@ public class AutonomousRed extends ETAutonomousBase {
       }
     }
   }
-
 }

@@ -19,9 +19,10 @@ public class AutonomousBlue extends ETAutonomousBase {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     left.setDirection(DcMotor.Direction.REVERSE);
+    /*waitOneFullHardwareCycle();
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();
+    waitOneFullHardwareCycle();*/
   }
 
   @Override
