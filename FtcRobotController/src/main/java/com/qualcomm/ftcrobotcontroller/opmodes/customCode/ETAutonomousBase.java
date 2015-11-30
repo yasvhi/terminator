@@ -17,6 +17,7 @@ public class ETAutonomousBase extends LinearOpMode {
   final static double WHEEL_DIAMETER = 2.625;     //diameter of wheel
   final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
   final static int ERROR_THRESHOLD = 10;
+  public static final int TURN_DELAY = 800;
 
 
   protected static boolean isTargetSet = false;
@@ -38,8 +39,9 @@ public class ETAutonomousBase extends LinearOpMode {
   final static int STAGE_STOP = 100;
 
   public void etInit() throws InterruptedException {
-
-    
+    right = hardwareMap.dcMotor.get("Right");
+    left = hardwareMap.dcMotor.get("Left");
+    left.setDirection(DcMotor.Direction.REVERSE);
   }
   public void etSetup() throws InterruptedException {
     stage = STAGE_MOVE_FIRST;
@@ -84,7 +86,7 @@ public class ETAutonomousBase extends LinearOpMode {
     right.setPower(rightPower);
     left.setPower(leftPower);
     telemetry.addData("Started Turning leftSetPower0, power:", left.getPower());
-    sleep(800);
+    sleep(TURN_DELAY);
 
   }
 
