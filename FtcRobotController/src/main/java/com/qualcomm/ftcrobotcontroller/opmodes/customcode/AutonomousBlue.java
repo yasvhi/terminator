@@ -14,16 +14,16 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 
 public class AutonomousBlue extends ETAutonomousBase {
 
-  @Override
+  /*@Override
   public void etInit() throws InterruptedException {
     right = hardwareMap.dcMotor.get("Right");
     left = hardwareMap.dcMotor.get("Left");
     left.setDirection(DcMotor.Direction.REVERSE);
-    /*waitOneFullHardwareCycle();
+    waitOneFullHardwareCycle();
     right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    waitOneFullHardwareCycle();*/
-  }
+    waitOneFullHardwareCycle();
+  }*/
 
   @Override
   public void etLoop() throws InterruptedException {
