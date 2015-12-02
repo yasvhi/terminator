@@ -1,11 +1,4 @@
-/*
- * Copyright (c) 2015 Edina Terminators Robotics
- *
- * This software is distributed under the MIT License. The license text can be read in full at /LICENSE.txt
- * Authored by:
- * Luke Langefels <https://eku952@github.com>
- * Richik Sinha Choudhury <https://richiksc@github.com>
- */
+
 
 package com.qualcomm.ftcrobotcontroller.opmodes.customcode;
 
