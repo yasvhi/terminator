@@ -8,17 +8,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class TeleOp extends OpMode {
   private DcMotor Right;
   private DcMotor Left;
-  private Servo servoR;
-  private Servo servoL;
-  private Servo servoM;
-  //private DcMotor backRight;
-  //private DcMotor backLeft;
+  //private Servo servoR;
+  //private Servo servoL;
+  //private Servo servoM;
+  private DcMotor tapeMeasure;
+  private DcMotor hook;
 
   @Override
   public void init() {
     Right = hardwareMap.dcMotor.get("Right");
     Left = hardwareMap.dcMotor.get("Left");
-    servoR = hardwareMap.servo.get("ServoR");
+    tapeMeasure = hardwareMap.dcMotor.get("TapeMeasure");
+    hook = hardwareMap.dcMotor.get("Hook");
+    /*servoR = hardwareMap.servo.get("ServoR");
     servoL = hardwareMap.servo.get("ServoL");
     servoM = hardwareMap.servo.get("ServoM");
     servoR.setPosition(0.5);
@@ -26,10 +28,10 @@ public class TeleOp extends OpMode {
     servoR.setDirection(Servo.Direction.REVERSE);
     //backRight = hardwareMap.dcMotor.get("Back_Right");
     //backLeft = hardwareMap.dcMotor.get("Back_Left");
-
+*/
     Right.setDirection(DcMotor.Direction.REVERSE);
     //backRight.setDirection(DcMotor.Direction.REVERSE);
-    servoM.setPosition(0.6);
+    //servoM.setPosition(0.6);
   }
 
   @Override
@@ -49,6 +51,13 @@ public class TeleOp extends OpMode {
         rightY = gamepad1.right_stick_y;
     }
 
+    if(gamepad2.right_trigger > 0.25) {
+      tapeMeasure.setPower(gamepad2.right_trigger);
+    }
+
+    if(gamepad2.left_trigger > 0.25) {
+      hook.setPower(gamepad2.left_trigger);
+    }
 
     if(gamepad1.right_trigger > 0.25)
       factor = gamepad1.right_trigger;
@@ -59,17 +68,5 @@ public class TeleOp extends OpMode {
     Right.setPower(rightY * factor);
     Left.setPower(leftY * factor);
 
-    if(gamepad2.b) {
-      servoR.setPosition(0.15);
-    }
-    if(gamepad2.x) {
-      servoR.setPosition(0.5);
-    }
-    if(gamepad2.y) {
-      servoL.setPosition(0.1);
-    }
-    if(gamepad2.a) {
-      servoL.setPosition(0.5);
-    }
   }
 }
