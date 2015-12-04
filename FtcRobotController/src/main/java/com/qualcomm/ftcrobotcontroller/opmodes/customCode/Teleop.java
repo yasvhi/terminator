@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class Teleop extends OpMode {
+public class TeleOp extends OpMode {
   private DcMotor Right;
   private DcMotor Left;
   private Servo servoR;
@@ -41,17 +41,17 @@ public class Teleop extends OpMode {
     //double servoPositionR = 0;
     //double servoPositionL = 0;
 
-    if(gamepad1.right_bumper || gamepad1.left_bumper) {
-        toggled = true;
-    }
+    if(gamepad1.right_bumper || gamepad1.left_bumper)
+      toggled = true;
     telemetry.addData("Inverted Controls", (toggled ? "On":"Off"));
     if(toggled) {
         leftY = gamepad1.left_stick_y;
         rightY = gamepad1.right_stick_y;
     }
 
+
     if(gamepad1.right_trigger > 0.25)
-        factor = gamepad1.right_trigger;
+      factor = gamepad1.right_trigger;
 
     telemetry.addData("Power Factor", factor);
     //telemetry.addData("ServoR", servoPositionR);
@@ -59,16 +59,16 @@ public class Teleop extends OpMode {
     Right.setPower(rightY * factor);
     Left.setPower(leftY * factor);
 
-    if(gamepad1.b) {
+    if(gamepad2.b) {
       servoR.setPosition(0.15);
     }
-    if(gamepad1.x) {
+    if(gamepad2.x) {
       servoR.setPosition(0.5);
     }
-    if(gamepad1.y) {
+    if(gamepad2.y) {
       servoL.setPosition(0.1);
     }
-    if(gamepad1.a) {
+    if(gamepad2.a) {
       servoL.setPosition(0.5);
     }
   }
