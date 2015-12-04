@@ -1,5 +1,3 @@
-
-
 package com.qualcomm.ftcrobotcontroller.opmodes.customcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
