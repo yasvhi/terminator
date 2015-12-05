@@ -44,8 +44,17 @@ public class ETAutonomousBase extends LinearOpMode {
     left.setDirection(DcMotor.Direction.REVERSE);
   }
   public void etSetup() throws InterruptedException {
+
+    // Reset all variables to initial value
+
+    // Stage = first stage
     stage = STAGE_MOVE_FIRST;
+    // Loop is not broken
     loopBreaker = false;
+    // Target is not set
+    isTargetSet = false;
+    // Counts is 0
+    counts = 0;
   }
   public void etLoop() throws InterruptedException {
     
